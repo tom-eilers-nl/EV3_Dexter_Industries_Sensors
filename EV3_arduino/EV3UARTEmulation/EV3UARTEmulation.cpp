@@ -1,3 +1,7 @@
+// Library made by lawrie.griffiths@ntlworld.com
+// DATA32 bug removed by Tom Eilers 
+
+
 #include "EV3UARTEmulation.h"
 #include <Serial.h>
 
@@ -180,9 +184,10 @@ void EV3UARTEmulation::send_data16(short* s, int len) {
 **/
 void EV3UARTEmulation::send_data32(long l) {
   byte bb[4];
-  for(int i=0;i<4;i++) {
-    bb[i] = (l >> (i * 8)) && 0xff;
-  }
+  bb[0] = l & 0xFF;
+  bb[1] = (l >> 8) & 0xFF;
+  bb[2] = (l >> 16) & 0xFF;
+  bb[3] = (l >> 24) & 0xFF;
   send_cmd(CMD_DATA | (2 << CMD_LLL_SHIFT) | current_mode, bb, 4);
 }
 
